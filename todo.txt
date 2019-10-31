@@ -1,0 +1,3 @@
+player move out from the screen
+ball hit the player
+game end when ball hit the left or right screen

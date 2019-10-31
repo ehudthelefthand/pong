@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Pong!</title>
+  <style>
+    #canvas {
+      background: #000;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="canvas"></canvas>
+  <script>
+    const SCREEN_WIDTH = 400
+    const SCREEN_HEIGHT = 300
+    const BALL_SIZE = 10
+    const PLAYER_WIDTH = 10
+    const PLAYER_HEIGHT = 60
+    const PLAYER_CENTER_Y = (SCREEN_HEIGHT / 2) - (PLAYER_HEIGHT / 2)
+    const PLAYER_SCREEN_MARGIN = 15
+
+    const canvas = document.getElementById("canvas")
+    canvas.width = SCREEN_WIDTH
+    canvas.height = SCREEN_HEIGHT
+    const ctx = canvas.getContext("2d")
+
+    function Ball(x = 0, y = 0) {
+      this.w = BALL_SIZE
+      this.h = BALL_SIZE
+      this.x = x
+      this.y = y
+      this.xspeed = 3
+      this.yspeed = 3
+    }
+
+    Ball.prototype.update = function () {
+      this.x += this.xspeed
+      this.y += this.yspeed
+
+      if (this.x + this.w > SCREEN_WIDTH) {
+        this.xspeed *= -1
+      }
+      if (this.x < 0) {
+        this.xspeed *= -1
+      }
+
+      if (this.y + this.h > SCREEN_HEIGHT) {
+        this.yspeed *= -1
+      }
+      if (this.y < 0) {
+        this.yspeed *= -1
+      }
+    }
+
+    function Player(x = 0, y = 0) {
+      this.w = PLAYER_WIDTH
+      this.h = PLAYER_HEIGHT
+      this.x = x
+      this.y = y
+      this.speed = 8
+    }
+
+    Player.prototype.moveDown = function () {
+      this.y += this.speed
+    }
+
+    Player.prototype.moveUp = function () {
+      this.y -= this.speed
+    }
+
+    const ball = new Ball()
+    const leftPlayer = new Player(PLAYER_SCREEN_MARGIN, PLAYER_CENTER_Y)
+    const rightPlayer = new Player(SCREEN_WIDTH - PLAYER_SCREEN_MARGIN - PLAYER_WIDTH, PLAYER_CENTER_Y)
+
+    function draw() {
+      ball.update()
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      drawReact(ball)
+      drawReact(leftPlayer)
+      drawReact(rightPlayer)
+
+      requestAnimationFrame(draw)
+    }
+    draw()
+
+    function drawReact(rect) {
+      ctx.fillStyle = "#fff"
+      ctx.fillRect(rect.x, rect.y, rect.w, rect.h)
+    }
+
+    window.addEventListener("keydown", function (e) {
+      switch (e.code) {
+        case "ArrowDown":
+          leftPlayer.moveDown()
+          break
+
+        case "ArrowUp":
+          leftPlayer.moveUp()
+          break
+
+        case "KeyZ":
+          rightPlayer.moveUp()
+          break
+        case "KeyA":
+          rightPlayer.moveDown()
+          break
+      }
+    })
+
+  </script>
+</body>
+
+</html>
